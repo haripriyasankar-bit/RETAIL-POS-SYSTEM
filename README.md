@@ -69,21 +69,21 @@ The system required:
 └────────────────────────────────────┘
 
 
+| Technology     | Purpose               |
+| -------------- | --------------------- |
+| **Node.js**    | Backend Runtime       |
+| **Express.js** | REST API Framework    |
+| **TypeScript** | Type Safety           |
+| **MongoDB**    | Database              |
+| **Mongoose**   | Database Modeling     |
+| **JWT**        | Authentication        |
+| **bcryptjs**   | Password Hashing      |
+| **Helmet**     | Security Middleware   |
+| **Morgan**     | Request Logging       |
+| **CORS**       | Cross-Origin Requests |
+| **dotenv**     | Environment Variables |
 
-🛠️ Tech Stack
-Technology	Purpose
-Node.js	Backend Runtime
-Express.js	REST API Framework
-TypeScript	Type Safety
-MongoDB	Database
-Mongoose	Database Modeling
-JWT	Authentication
-bcryptjs	Password Hashing
-Helmet	Security Middleware
-Morgan	Request Logging
-CORS	Cross-Origin Requests
-dotenv	Environment Variables
-Variables
+
 📅 Sprint Results
 ✅ Week 1 — Authentication & Security
 
@@ -98,6 +98,7 @@ JWT Token Authentication
 Protected Routes
 Role-Based Access Control (RBAC)
 
+
 Implemented Roles:
 
 Admin → Full Access
@@ -110,6 +111,7 @@ Register API → Working ✅
 Login API → Working ✅
 JWT Authentication → Working ✅
 Admin Route Protection → Working ✅
+
 ✅ Week 2 — Inventory & POS Billing
 
 Objective: Implement inventory and order processing
@@ -118,18 +120,23 @@ Product Management
 
 Implemented APIs:
 
-Method	Endpoint	Access
-POST	/api/products	Admin, Manager
-GET	/api/products	Logged-in Users
-PUT	/api/products/:id	Admin, Manager
-DELETE	/api/products/:id	Admin
+| Method | Endpoint          | Access          |
+| ------ | ----------------- | --------------- |
+| POST   | /api/products     | Admin, Manager  |
+| GET    | /api/products     | Logged-in Users |
+| PUT    | /api/products/:id | Admin, Manager  |
+| DELETE | /api/products/:id | Admin           |
+
+
 Order Management
 
 Implemented APIs:
 
-Method	Endpoint	Access
-POST	/api/orders	Admin, Manager, Cashier
-GET	/api/orders	Admin, Manager
+| Method | Endpoint    | Access                  |
+| ------ | ----------- | ----------------------- |
+| POST   | /api/orders | Admin, Manager, Cashier |
+| GET    | /api/orders | Admin, Manager          |
+
 
 Features:
 
@@ -140,74 +147,21 @@ Automatic Stock Reduction
 Order History Tracking
 
 Gate Check: ✅ PASSED
-
 Product CRUD → Working ✅
 Inventory Management → Working ✅
 Order Creation → Working ✅
 Stock Auto Reduction → Working ✅
 RBAC Restrictions → Working ✅
+
 🔐 Role-Based Access Control (RBAC)
-Role	Permissions
-Admin	Full system access
-Manager	Manage inventory & orders
-Cashier	Create orders & view products
-📁 Repository Structure
-RETAIL-POS-SYSTEM/
-│
-├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   ├── middleware/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── app.ts
-│   │   └── server.ts
-│
-├── .env
-├── package.json
-├── tsconfig.json
-├── nodemon.json
-└── README.md
-🚀 API Testing
+| Role        | Permissions                   |
+| ----------- | ----------------------------- |
+| **Admin**   | Full system access            |
+| **Manager** | Manage inventory & orders     |
+| **Cashier** | Create orders & view products |
 
-Tested APIs using:
 
-Thunder Client
-REST API Testing
-Example Product JSON
-{
-  "name": "Laptop",
-  "price": 50000,
-  "stock": 10,
-  "category": "Electronics"
-}
-Example Order JSON
-{
-  "userId": "user_id_here",
-  "items": [
-    {
-      "productId": "product_id_here",
-      "quantity": 2
-    }
-  ]
-}
-🎯 Key Achievements
 
-✅ Secure Authentication System
-✅ JWT Authorization
-✅ Role-Based Access Control
-✅ Product Inventory Management
-✅ POS Billing Backend
-✅ Automatic Stock Updates
-✅ MongoDB Integration
-✅ Professional REST API Architecture
 
-🔮 Future Enhancements
-Frontend Dashboard
-Payment Gateway Integration
-Invoice Generation
-Sales Analytics
-Docker Containerization
-Kubernetes Deployment
-│── nodemon.json
+
 
