@@ -1,71 +1,210 @@
-# Retail POS System Backend
+# Retail POS System — Secure Inventory & Billing Backend
+Node.js Status MongoDB JWT RBAC Platform
 
-A scalable **Retail Point of Sale (POS) Backend System** built using **Node.js, Express.js, TypeScript, MongoDB, and JWT Authentication**. This project provides secure authentication, role-based access control (RBAC), inventory management, and order processing for retail businesses.
+**Project 1 — Retail POS System**  
+A scalable **Retail Point of Sale (POS) Backend System** built using **Node.js, Express.js, TypeScript, MongoDB, and JWT Authentication** for secure user management, inventory control, and POS billing automation.
 
-## Features
+---
 
-### Authentication & Security
-- User Registration and Login
-- JWT Authentication
-- Password Encryption using bcryptjs
-- Protected Routes
-- Role-Based Access Control (RBAC)
+## 📌 Project Overview
 
-### User Roles
-- **Admin** – Full access to the system
-- **Manager** – Manage products and orders
-- **Cashier** – Create orders and view products
+| Field | Details |
+|--------|----------|
+| **Project Name** | Retail POS System |
+| **Role** | Backend Developer |
+| **Duration** | 2 Weeks |
+| **Status** | ✅ Completed |
+| **Architecture** | REST API Backend |
 
-### Product Management
-- Add Products
-- View Products
-- Update Product Details
-- Delete Products
-- Inventory Management
+---
 
-### Order Management (POS Billing)
-- Create Orders
-- Multiple Product Purchase
-- Automatic Total Bill Calculation
-- Automatic Stock Reduction
-- View Order History
+## 🎯 Problem Statement
 
-## Tech Stack
+Retail stores require a secure and centralized backend system to:
 
-### Backend
-- Node.js
-- Express.js
-- TypeScript
+- Manage inventory efficiently
+- Restrict access based on employee roles
+- Process customer orders securely
+- Reduce stock automatically after purchase
+- Prevent unauthorized product manipulation
 
-### Database
-- MongoDB
-- Mongoose
+The system required:
 
-### Authentication & Security
-- JWT (JSON Web Token)
-- bcryptjs
-- Helmet
+- Secure authentication
+- Role-based access control
+- Inventory CRUD operations
+- Order processing and stock management
+- Protected API endpoints
 
-### Middleware & Utilities
-- Morgan
-- CORS
-- dotenv
-- express-validator
+---
 
-## Project Structure
+## 🏗️ System Architecture
 
 ```text
-backend/
-│── src/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── app.ts
-│   ├── server.ts
+┌────────────────────────────────────┐
+│          Retail POS Backend        │
+│                                    │
+│  ┌──────────────────────────────┐  │
+│  │ Authentication Service       │  │
+│  │ - Register/Login             │  │
+│  │ - JWT Authentication         │  │
+│  │ - RBAC Authorization         │  │
+│  └──────────────────────────────┘  │
+│                                    │
+│  ┌──────────────────────────────┐  │
+│  │ Product Management           │  │
+│  │ - Add Product                │  │
+│  │ - Update Product             │  │
+│  │ - Delete Product             │  │
+│  │ - Inventory Tracking         │  │
+│  └──────────────────────────────┘  │
+│                                    │
+│  ┌──────────────────────────────┐  │
+│  │ Order Management             │  │
+│  │ - Create Orders              │  │
+│  │ - Billing Calculation        │  │
+│  │ - Stock Reduction            │  │
+│  │ - Order History              │  │
+│  └──────────────────────────────┘  │
+└────────────────────────────────────┘
+🛠️ Tech Stack
+Technology	Purpose
+Node.js	Backend Runtime
+Express.js	REST API Framework
+TypeScript	Type Safety
+MongoDB	Database
+Mongoose	Database Modeling
+JWT	Authentication
+bcryptjs	Password Hashing
+Helmet	Security Middleware
+Morgan	Request Logging
+CORS	Cross-Origin Requests
+dotenv	Environment Variables
+Variables
+📅 Sprint Results
+✅ Week 1 — Authentication & Security
+
+Objective: Build secure login system with RBAC
+
+Completed:
+
+User Registration API
+Login API
+Password Hashing using bcryptjs
+JWT Token Authentication
+Protected Routes
+Role-Based Access Control (RBAC)
+
+Implemented Roles:
+
+Admin → Full Access
+Manager → Product & Order Access
+Cashier → Order Creation Only
+
+Gate Check: ✅ PASSED
+
+Register API → Working ✅
+Login API → Working ✅
+JWT Authentication → Working ✅
+Admin Route Protection → Working ✅
+✅ Week 2 — Inventory & POS Billing
+
+Objective: Implement inventory and order processing
+
+Product Management
+
+Implemented APIs:
+
+Method	Endpoint	Access
+POST	/api/products	Admin, Manager
+GET	/api/products	Logged-in Users
+PUT	/api/products/:id	Admin, Manager
+DELETE	/api/products/:id	Admin
+Order Management
+
+Implemented APIs:
+
+Method	Endpoint	Access
+POST	/api/orders	Admin, Manager, Cashier
+GET	/api/orders	Admin, Manager
+
+Features:
+
+Create Customer Orders
+Multiple Product Purchase
+Automatic Total Bill Calculation
+Automatic Stock Reduction
+Order History Tracking
+
+Gate Check: ✅ PASSED
+
+Product CRUD → Working ✅
+Inventory Management → Working ✅
+Order Creation → Working ✅
+Stock Auto Reduction → Working ✅
+RBAC Restrictions → Working ✅
+🔐 Role-Based Access Control (RBAC)
+Role	Permissions
+Admin	Full system access
+Manager	Manage inventory & orders
+Cashier	Create orders & view products
+📁 Repository Structure
+RETAIL-POS-SYSTEM/
 │
-│── .env
-│── package.json
-│── tsconfig.json
+├── backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── app.ts
+│   │   └── server.ts
+│
+├── .env
+├── package.json
+├── tsconfig.json
+├── nodemon.json
+└── README.md
+🚀 API Testing
+
+Tested APIs using:
+
+Thunder Client
+REST API Testing
+Example Product JSON
+{
+  "name": "Laptop",
+  "price": 50000,
+  "stock": 10,
+  "category": "Electronics"
+}
+Example Order JSON
+{
+  "userId": "user_id_here",
+  "items": [
+    {
+      "productId": "product_id_here",
+      "quantity": 2
+    }
+  ]
+}
+🎯 Key Achievements
+
+✅ Secure Authentication System
+✅ JWT Authorization
+✅ Role-Based Access Control
+✅ Product Inventory Management
+✅ POS Billing Backend
+✅ Automatic Stock Updates
+✅ MongoDB Integration
+✅ Professional REST API Architecture
+
+🔮 Future Enhancements
+Frontend Dashboard
+Payment Gateway Integration
+Invoice Generation
+Sales Analytics
+Docker Containerization
+Kubernetes Deployment
 │── nodemon.json
 
