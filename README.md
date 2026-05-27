@@ -1,167 +1,105 @@
-# Retail POS System — Secure Inventory & Billing Backend
-Node.js Status MongoDB JWT RBAC Platform
+# 🛒 Omnichannel Retail POS & Inventory Management System
 
-**Project 1 — Retail POS System**  
-A scalable **Retail Point of Sale (POS) Backend System** built using **Node.js, Express.js, TypeScript, MongoDB, and JWT Authentication** for secure user management, inventory control, and POS billing automation.
+> A cloud-native, full-stack Point of Sale and Inventory Management System built for the Infotact Technical Internship Program. This platform unifies physical and digital retail operations into a single source of truth, with real-time inventory tracking, role-based access control, and secure transaction processing.
 
 ---
 
-## 📌 Project Overview
+## 📋 Table of Contents
 
-| Field | Details |
-|--------|----------|
-| **Project Name** | Retail POS System |
-| **Role** | Backend Developer |
-| **Duration** | 2 Weeks |
-| **Status** | ✅ Completed |
-| **Architecture** | REST API Backend |
-
----
-
-## 🎯 Problem Statement
-
-Retail stores require a secure and centralized backend system to:
-
-- Manage inventory efficiently
-- Restrict access based on employee roles
-- Process customer orders securely
-- Reduce stock automatically after purchase
-- Prevent unauthorized product manipulation
-
-The system required:
-
-- Secure authentication
-- Role-based access control
-- Inventory CRUD operations
-- Order processing and stock management
-- Protected API endpoints
+- [Project Overview](#project-overview)
+- [Tech Stack](#tech-stack)
+- [Development Progress](#development-progress)
+  - [Week 1 — Foundation, Auth & Core APIs](#week-1--foundation-auth--core-apis)
+  - [Week 2 — Inventory Engine & Advanced APIs](#week-2--inventory-engine--advanced-apis-in-progress)
+- [API Reference](#api-reference)
+- [Database Schema](#database-schema)
+- [Environment Setup](#environment-setup)
+- [Folder Structure](#folder-structure)
 
 ---
 
-## 🏗️ System Architecture
+## Project Overview
 
-```text
-┌────────────────────────────────────┐
-│          Retail POS Backend        │
-│                                    │
-│  ┌──────────────────────────────┐  │
-│  │ Authentication Service       │  │
-│  │ - Register/Login             │  │
-│  │ - JWT Authentication         │  │
-│  │ - RBAC Authorization         │  │
-│  └──────────────────────────────┘  │
-│                                    │
-│  ┌──────────────────────────────┐  │
-│  │ Product Management           │  │
-│  │ - Add Product                │  │
-│  │ - Update Product             │  │
-│  │ - Delete Product             │  │
-│  │ - Inventory Tracking         │  │
-│  └──────────────────────────────┘  │
-│                                    │
-│  ┌──────────────────────────────┐  │
-│  │ Order Management             │  │
-│  │ - Create Orders              │  │
-│  │ - Billing Calculation        │  │
-│  │ - Stock Reduction            │  │
-│  │ - Order History              │  │
-│  └──────────────────────────────┘  │
-└────────────────────────────────────┘
+Modern retail businesses transitioning to digital models frequently face systemic bottlenecks from fragmented legacy software — inaccurate inventory across stores, disconnected pricing, and slow POS terminals. This system addresses those challenges by providing:
 
+- 🔄 Real-time inventory synchronization after every transaction
+- 🔐 Secure, role-based access for Cashiers, Managers, and Admins
+- 🧾 Atomic order processing with automatic stock decrement
+- 📦 Centralized product catalog with full CRUD support
+- 📊 Foundation for a business intelligence dashboard (upcoming)
 
-| Technology     | Purpose               |
-| -------------- | --------------------- |
-| **Node.js**    | Backend Runtime       |
-| **Express.js** | REST API Framework    |
-| **TypeScript** | Type Safety           |
-| **MongoDB**    | Database              |
-| **Mongoose**   | Database Modeling     |
-| **JWT**        | Authentication        |
-| **bcryptjs**   | Password Hashing      |
-| **Helmet**     | Security Middleware   |
-| **Morgan**     | Request Logging       |
-| **CORS**       | Cross-Origin Requests |
-| **dotenv**     | Environment Variables |
+---
 
+## Tech Stack
 
-📅 Sprint Results
-✅ Week 1 — Authentication & Security
+| Layer | Technology | Reason |
+|---|---|---|
+| **Frontend** | React.js, Tailwind CSS | Reusable components, responsive POS UI |
+| **Backend** | Node.js, Express.js, TypeScript | Async runtime ideal for I/O-heavy transactions; compile-time type safety |
+| **Database** | MongoDB via Mongoose ODM | Flexible NoSQL schema; structured ODM layer for data integrity |
+| **Caching** | Redis | In-memory caching for product catalog reads |
+| **Auth** | JWT + bcrypt | Stateless, secure token-based authentication |
+| **DevOps** | Docker, GitHub Actions, Vercel/AWS | Containerized environments; automated CI/CD |
 
-Objective: Build secure login system with RBAC
+---
 
-Completed:
+## Development Progress
 
-User Registration API
-Login API
-Password Hashing using bcryptjs
-JWT Token Authentication
-Protected Routes
-Role-Based Access Control (RBAC)
+### Week 1 — Foundation, Auth & Core APIs
 
+**Sprint Goal:** Establish foundational infrastructure, database schema, authentication system, RBAC middleware, and core product/order APIs.
 
-Implemented Roles:
+---
 
-Admin → Full Access
-Manager → Product & Order Access
-Cashier → Order Creation Only
+#### ✅ Repository & Environment Setup
 
-Gate Check: ✅ PASSED
+- Initialized GitHub repository with branch protection rules (PRs required for merges to `main`)
+- Configured monorepo structure separating `/client` (React) and `/server` (Express + TypeScript)
+- Dockerized local development environment to spin up MongoDB and Redis instances consistently across platforms
+- Established `.env`-based configuration with `.env.example` for onboarding
 
-Register API → Working ✅
-Login API → Working ✅
-JWT Authentication → Working ✅
-Admin Route Protection → Working ✅
+---
 
-✅ Week 2 — Inventory & POS Billing
+#### ✅ Database Schema Design (Mongoose ODM)
 
-Objective: Implement inventory and order processing
+Designed and implemented the following core Mongoose collections:
 
-Product Management
+**`User`**
+- Fields: `name`, `email`, `password` (bcrypt hashed), `role` (`cashier | manager | admin`), `storeId`, `timestamps`
+- Indexes: `email` (unique), `role`
 
-Implemented APIs:
+**`Product`**
+- Fields: `name`, `description`, `sku`, `price`, `category`, `variants` (size/color), `stockQuantity`, `storeId`, `timestamps`
+- Indexes: `sku` (unique), `name` (text index for search)
 
-| Method | Endpoint          | Access          |
-| ------ | ----------------- | --------------- |
-| POST   | /api/products     | Admin, Manager  |
-| GET    | /api/products     | Logged-in Users |
-| PUT    | /api/products/:id | Admin, Manager  |
-| DELETE | /api/products/:id | Admin           |
+**`Order`**
+- Fields: `items` (array of `{ productId, quantity, unitPrice }`), `totalAmount`, `cashierId`, `storeId`, `paymentMethod`, `status`, `timestamps`
+- References: `User` (cashier), `Product` (line items)
 
+> Schema decisions prioritize high-frequency query patterns — text indexes on product name for barcode-simulated search, and store-scoped indexes for multi-location filtering.
 
-Order Management
+---
 
-Implemented APIs:
+#### ✅ Authentication System
 
-| Method | Endpoint    | Access                  |
-| ------ | ----------- | ----------------------- |
-| POST   | /api/orders | Admin, Manager, Cashier |
-| GET    | /api/orders | Admin, Manager          |
+Implemented a stateless, JWT-based authentication mechanism:
 
+- **`POST /api/auth/register`** — Creates a new user; password hashed with `bcrypt` (salt rounds: 10)
+- **`POST /api/auth/login`** — Validates credentials, returns signed JWT (expiry: 7 days)
+- JWT payload includes `userId`, `role`, and `storeId` for downstream RBAC checks
+- `verifyToken` middleware extracts and validates the token on all protected routes
 
-Features:
+---
 
-Create Customer Orders
-Multiple Product Purchase
-Automatic Total Bill Calculation
-Automatic Stock Reduction
-Order History Tracking
+#### ✅ Role-Based Access Control (RBAC)
 
-Gate Check: ✅ PASSED
-Product CRUD → Working ✅
-Inventory Management → Working ✅
-Order Creation → Working ✅
-Stock Auto Reduction → Working ✅
-RBAC Restrictions → Working ✅
+Implemented a granular RBAC middleware layer (`authorizeRoles.ts`) that enforces permissions at the route level:
 
-🔐 Role-Based Access Control (RBAC)
-| Role        | Permissions                   |
-| ----------- | ----------------------------- |
-| **Admin**   | Full system access            |
-| **Manager** | Manage inventory & orders     |
-| **Cashier** | Create orders & view products |
+| Role | Permissions |
+|---|---|
+| `cashier` | Create orders, view products |
+| `manager` | All cashier permissions + manage products + view inventory |
+| `admin` | Full system access including user management and reports |
 
-
-
-
-
-
+Usage example:
+```typescript
