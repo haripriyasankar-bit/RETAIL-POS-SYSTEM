@@ -9,6 +9,7 @@ import productRoutes from "./routes/productroute";
 import orderRoutes from "./routes/orderroutes";
 
 
+
 dotenv.config();
 
 const app = express();
@@ -23,6 +24,8 @@ app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
 
 app.use("/api/test", testRoutes);
+
+app.use("/api/orders", orderRoutes);
 
 app.use("/api/products", productRoutes);
 

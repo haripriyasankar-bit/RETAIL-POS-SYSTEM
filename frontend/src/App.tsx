@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 function App() {
@@ -13,11 +13,21 @@ function App() {
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [category, setCategory] = useState("");
+  const [Orders, setOrders] = useState<any[]>([]);
+  const [editId, setEditId] = useState("");
+  const [selectedProduct, setSelectedProduct] =
+  useState("");
+
+const [quantity, setQuantity] =
+  useState("");
 
   // Fetch Products
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get(
+ // Fetch Products
+const fetchProducts = async () => {
+  
+  try {
+    const response =
+      await axios.get(
         "http://localhost:5000/api/products",
         {
           headers: {
@@ -26,17 +36,33 @@ function App() {
         }
       );
 
-      setProducts(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    setProducts(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-  useEffect(() => {
-    if (user) {
-      fetchProducts();
-    }
-  }, []);
+// Fetch Orders
+const fetchOrders = async () => {
+
+  try {
+    const response =
+      await axios.get(
+        "http://localhost:5000/api/orders",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+    setOrders(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 
   // Login Function
   const handleLogin = async (e: React.FormEvent) => {
@@ -66,22 +92,42 @@ const handleAddProduct = async (
   e.preventDefault();
 
   try {
-    await axios.post(
-      "http://localhost:5000/api/products",
-      {
-        name,
-        price,
-        stock,
-        category,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+    if (editId) {
+      await axios.put(
+        `http://localhost:5000/api/products/${editId}`,
+        {
+          name,
+          price,
+          stock,
+          category,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    alert("Product Added ✅");
+      alert("Product Updated ✅");
+      setEditId("");
+    } else {
+      await axios.post(
+        "http://localhost:5000/api/products",
+        {
+          name,
+          price,
+          stock,
+          category,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Product Added ✅");
+    }
 
     setName("");
     setPrice("");
@@ -91,9 +137,47 @@ const handleAddProduct = async (
     fetchProducts();
   } catch (error) {
     console.error(error);
-    alert("Failed to add product ❌");
+    alert("Operation Failed ❌");
   }
-}
+};
+const handleCreateOrder = async (
+  e: React.FormEvent
+) => {
+  e.preventDefault();
+
+  try {
+    const token =
+      localStorage.getItem("token");
+
+    await axios.post(
+      "http://localhost:5000/api/orders",
+      {
+        productId: selectedProduct,
+        quantity: Number(quantity),
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    alert("Order Created ✅");
+
+    setSelectedProduct("");
+    setQuantity("");
+
+    fetchProducts();
+    fetchOrders();
+  } catch (error: any) {
+    console.error(error.response?.data);
+
+    alert(
+      error.response?.data?.message ||
+        "Order Failed ❌"
+    );
+  }
+};
 const handleDeleteProduct = async (
   id: string
 ) => {
@@ -192,7 +276,54 @@ const handleDeleteProduct = async (
     type="submit"
     className="col-span-2 bg-green-600 text-white p-3 rounded-lg"
   >
-    Add Product
+   {editId ? "Update Product" : "Add Product"}
+  </button>
+</form>
+<h2 className="text-2xl font-bold mt-8 mb-4">
+  Create Order
+</h2>
+
+<form
+  onSubmit={handleCreateOrder}
+  className="grid grid-cols-2 gap-4 mb-8"
+>
+  <select
+    className="border p-3 rounded-lg"
+    value={selectedProduct}
+    onChange={(e) =>
+      setSelectedProduct(e.target.value)
+    }
+  >
+    <option value="">
+      Select Product
+    </option>
+
+    {products.map((product: any) => (
+      <option
+        key={product._id}
+        value={product._id}
+      >
+        {product.name} (Stock:
+        {product.stock})
+      </option>
+    ))}
+  </select>
+
+  <input
+    type="number"
+    placeholder="Quantity"
+    className="border p-3 rounded-lg"
+    value={quantity}
+    onChange={(e) =>
+      setQuantity(e.target.value)
+    }
+  />
+
+  <button
+    type="submit"
+    className="col-span-2 bg-purple-600 text-white p-3 rounded-lg"
+  >
+    Create Order
   </button>
 </form>
           <h2 className="text-2xl font-bold mt-8 mb-4">
@@ -207,7 +338,7 @@ const handleDeleteProduct = async (
                   <th className="p-3">Price</th>
                   <th className="p-3">Stock</th>
                   <th className="p-3">Category</th>
-                  <th className="p-3">Action</th>
+                  <th className="p-3">Actions</th>
                 </tr>
               </thead>
 
@@ -221,7 +352,20 @@ const handleDeleteProduct = async (
                     <td className="p-3">₹{product.price}</td>
                     <td className="p-3">{product.stock}</td>
                     <td className="p-3">{product.category}</td>
-                    <td className="p-3">
+                    <td className="p-3 space-x-2">
+  <button
+    onClick={() => {
+      setEditId(product._id);
+      setName(product.name);
+      setPrice(product.price.toString());
+      setStock(product.stock.toString());
+      setCategory(product.category);
+    }}
+    className="bg-yellow-500 text-white px-4 py-2 rounded-lg"
+  >
+    Edit
+  </button>
+
   <button
     onClick={() =>
       handleDeleteProduct(product._id)
@@ -235,6 +379,70 @@ const handleDeleteProduct = async (
                 ))}
               </tbody>
             </table>
+            <h2 className="text-2xl font-bold mt-8 mb-4">
+  Order History
+</h2>
+
+<div className="overflow-x-auto">
+  <table className="w-full border border-gray-300">
+    <thead className="bg-purple-600 text-white">
+      <tr>
+        <th className="p-3">
+          Product
+        </th>
+
+        <th className="p-3">
+          Quantity
+        </th>
+
+        <th className="p-3">
+          Total Price
+        </th>
+
+        <th className="p-3">
+          Date
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {Orders.map(
+        (order: any) => (
+          <tr
+            key={order._id}
+            className="text-center border-b"
+          >
+            <td className="p-3">
+              {
+                order.productId
+                  ?.name
+              }
+            </td>
+
+            <td className="p-3">
+              {
+                order.quantity
+              }
+            </td>
+
+            <td className="p-3">
+              ₹
+              {
+                order.totalPrice
+              }
+            </td>
+
+            <td className="p-3">
+              {new Date(
+                order.createdAt
+              ).toLocaleDateString()}
+            </td>
+          </tr>
+        )
+      )}
+    </tbody>
+  </table>
+</div>
           </div>
         </div>
       </div>

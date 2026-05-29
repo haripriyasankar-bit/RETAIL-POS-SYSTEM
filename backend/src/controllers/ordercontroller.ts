@@ -2,88 +2,83 @@ import { Request, Response } from "express";
 import Order from "../models/order";
 import Product from "../models/product";
 
-export const createOrder =
-  async (
-    req: Request,
-    res: Response
-  ) => {
-    try {
-      const {
-        userId,
-        items
-      } = req.body;
+export const createOrder = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { productId, quantity } =
+      req.body;
 
-      let totalAmount = 0;
+    const product =
+      await Product.findById(productId);
 
-      for (const item of items) {
-        const product =
-          await Product.findById(
-            item.productId
-          );
+    if (!product) {
+      return res
+        .status(404)
+        .json({
+          message:
+            "Product not found",
+        });
+    }
 
-        if (!product) {
-          return res
-            .status(404)
-            .json({
-              message:
-                "Product not found"
-            });
-        }
+    if (
+      product.stock < quantity
+    ) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Not enough stock",
+        });
+    }
 
-        if (
-          product.stock <
-          item.quantity
-        ) {
-          return res
-            .status(400)
-            .json({
-              message:
-                "Insufficient stock"
-            });
-        }
+    product.stock -= quantity;
+    await product.save();
 
-        totalAmount +=
+    const order =
+      await Order.create({
+        productId,
+        quantity,
+        totalPrice:
           product.price *
-          item.quantity;
+          quantity,
+      });
 
-        product.stock -=
-          item.quantity;
+    res.status(201).json(order);
+  } catch (error) {
+    console.error(error);
 
-        await product.save();
-      }
-
-      const order =
-        await Order.create({
-          userId,
-          items,
-          totalAmount
+    res.status(500).json({
+      message:
+        "Error creating order",
+    });
+  }
+};
+export const getOrders = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const orders =
+      await Order.find()
+        .populate(
+          "productId",
+          "name"
+        )
+        .sort({
+          createdAt: -1,
         });
 
-      res.status(201).json(order);
-    } catch (error) {
-      res.status(500).json({
-        message:
-          "Error creating order"
-      });
-    }
-  };
+    res.status(200).json(
+      orders
+    );
+  } catch (error) {
+    console.error(error);
 
-export const getOrders =
-  async (
-    req: Request,
-    res: Response
-  ) => {
-    try {
-      const orders =
-        await Order.find();
-
-      res.status(200).json(
-        orders
-      );
-    } catch (error) {
-      res.status(500).json({
-        message:
-          "Error fetching orders"
-      });
-    }
-  };
+    res.status(500).json({
+      message:
+        "Error fetching orders",
+    });
+  }
+};
