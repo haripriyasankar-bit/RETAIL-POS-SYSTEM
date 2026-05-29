@@ -8,9 +8,12 @@ import testRoutes from "./routes/testroutes";
 import productRoutes from "./routes/productroute";
 import orderRoutes from "./routes/orderroutes";
 
+
 dotenv.config();
 
 const app = express();
+app.use(cors());
+
 
 app.use(express.json());
 app.use(cors());
