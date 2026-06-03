@@ -339,6 +339,7 @@ RBAC Restrictions → Working ✅
 
 - React Frontend Dashboard
 - Payment Gateway Integration
+- History Generating
 - Invoice Generation
 - Sales Analytics
 - Docker Containerization
